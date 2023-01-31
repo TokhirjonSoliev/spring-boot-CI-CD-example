@@ -1,29 +1,27 @@
 pipeline {
     agent any
     stages {
-        stage ("build") {
-            steps {
-                echo 'building the application...'
-            }
-        }
-        stage ("test") {
-            when {
-                expression {
-                    BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
-                }
-            }
-            steps {
-                echo 'testing the application...'
-            }
-        }
-        stage ("deploy") {
+        stage ("Clone Repo") {
             when {
                 expression {
                     BRANCH_NAME == 'master'
                 }
             }
             steps {
-                echo 'deploying the application...'
+                echo 'cloning the application...'
+                git url: 'https://github.com/TokhirjonSoliev/spring-boot-CI-CD-example.git'
+            }
+        }
+        stage ("Build docker") {
+            steps {
+                echo 'building docker image of the application...'
+                sh 'docker build -t spring-boot-example .'
+            }
+        }
+        stage ("Docker run") {
+            steps {
+                echo 'running the image of the application...'
+                sh 'docker run -d -p 8081:8082 spring-boot-example'
             }
         }
     }
