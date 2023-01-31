@@ -16,7 +16,7 @@ pipeline {
                 echo 'testing the application...'
             }
         }
-        stages ("deploy") {
+        stage ("deploy") {
             when {
                 expression {
                     BRANCH_NAME == 'master'
